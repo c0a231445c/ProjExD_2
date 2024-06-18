@@ -13,7 +13,7 @@ DELTA = {  # 移動量辞書
 }
 
 
-def zisyo():
+def zisyo():  # 飛ぶ方向の画像辞書
     kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)  # -5, 0 
     kk_img2 = pg.transform.flip(kk_img, True, False)  # +5, 0
     
