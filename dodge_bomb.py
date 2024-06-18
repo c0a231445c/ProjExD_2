@@ -11,6 +11,23 @@ DELTA = {  # 移動量辞書
     pg.K_LEFT:(-5,0),
     pg.K_RIGHT:(+5,0),
 }
+
+
+def zisyo():
+    kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)  # -5, 0 
+    kk_img2 = pg.transform.flip(kk_img, True, False)  # +5, 0
+    
+    return {
+        (0,-5): pg.transform.rotozoom(kk_img2, 90, 1.0),
+        (+5,-5): pg.transform.rotozoom(kk_img2, 50, 1.0),
+        (+5,0): kk_img2,
+        (+5,+5): pg.transform.rotozoom(kk_img2, -50, 1.0),
+        (0,+5): pg.transform.rotozoom(kk_img2, -90, 1.0),
+        (-5,+5): pg.transform.rotozoom(kk_img, 50, 1.0),
+        (-5,0): kk_img,
+        (-5,-5): pg.transform.rotozoom(kk_img, -50, 1.0), 
+        (0,0): kk_img,
+    }
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -32,8 +49,8 @@ def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("fig/pg_bg.jpg")    
-    kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
-    kk_rct = kk_img.get_rect()
+    kk_imgs = zisyo()[(0,0)]
+    kk_rct = kk_imgs.get_rect()
     kk_rct.center = 900, 400
     bb_img = pg.Surface((20, 20))  # 1辺が20の空のSurfaceを作る
     bb_img.set_colorkey((0, 0, 0))
@@ -62,7 +79,8 @@ def main():
         kk_rct.move_ip(sum_mv)
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
-        screen.blit(kk_img, kk_rct)
+        kk_imgs = zisyo()[tuple(sum_mv)]
+        screen.blit(kk_imgs, kk_rct)
 
         bb_rct.move_ip(vx, vy)
         yoko, tate = check_bound(bb_rct)
